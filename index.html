@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SNA Analytics Console</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SNA</div>
+          <div>
+            <strong>INTELLIGENCE</strong>
+            <span>Analytics Console</span>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Navigasi utama">
+          <button class="nav-item active" data-section="Overview">
+            <span class="nav-icon">▦</span><span>Overview</span>
+          </button>
+          <button class="nav-item" data-section="Data Explorer">
+            <span class="nav-icon">⌁</span><span>Data Explorer</span>
+          </button>
+          <button class="nav-item" data-section="Graph Builder">
+            <span class="nav-icon">⋈</span><span>Graph Builder</span>
+            <small>LIVE</small>
+          </button>
+          <button class="nav-item" data-section="SNA Analysis">
+            <span class="nav-icon">◉</span><span>SNA Analysis</span>
+          </button>
+          <button class="nav-item" data-section="Reports">
+            <span class="nav-icon">▤</span><span>Reports</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <button class="nav-item" data-section="Settings"><span class="nav-icon">⚙</span><span>Settings</span></button>
+          <div class="system-status">
+            <span class="status-dot"></span>
+            <div><small>NODE STATUS</small><strong>Online</strong></div>
+            <span class="status-time">38ms</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar-status">
+            <span class="status-dot"></span>
+            <span>STATUS: <strong>OPERATIONAL</strong></span>
+          </div>
+          <div class="topbar-actions">
+            <button class="run-button" id="runAnalysis">▶ Run SNA Computation</button>
+            <button class="outline-button" id="exportButton">⇩ Export / CSV / JSON</button>
+          </div>
+        </header>
+
+        <section class="dashboard">
+          <div class="metrics-strip">
+            <article class="metric">
+              <small>TOTAL NODES</small>
+              <div><strong id="nodeCount">42,936</strong><span class="delta positive">+12.5%</span></div>
+              <em>Network entities</em>
+            </article>
+            <article class="metric">
+              <small>TOTAL EDGES</small>
+              <div><strong id="edgeCount">178,291</strong><span class="delta positive">+8.2%</span></div>
+              <em>Inter-account links</em>
+            </article>
+            <article class="metric">
+              <small>ACTIVE COMMUNITIES</small>
+              <div><strong>18</strong><span class="delta neutral">LIVE</span></div>
+              <em>Detected clusters</em>
+            </article>
+            <article class="metric">
+              <small>NETWORK DENSITY</small>
+              <div><strong id="densityValue">0.0042</strong><span class="delta positive">+0.0008</span></div>
+              <em>Graph cohesion</em>
+            </article>
+            <article class="metric">
+              <small>AVG. CLUSTERING</small>
+              <div><strong id="clusteringValue">0.862</strong><span class="delta negative">-1.2%</span></div>
+              <em>Local connectivity</em>
+            </article>
+            <article class="metric">
+              <small>RUN EVALUATION</small>
+              <div><strong id="runTime">99.34s</strong></div>
+              <em id="runStatus">Completed</em>
+            </article>
+          </div>
+
+          <div class="workspace">
+            <section class="graph-column">
+              <div class="panel graph-panel">
+                <div class="panel-title">
+                  <div class="title-icon">✣</div>
+                  <div><strong>Sociogram Topology Canvas</strong><span>REAL-TIME NETWORK</span></div>
+                  <div class="graph-tools">
+                    <button title="Fit graph" id="fitGraph">⊙</button>
+                    <button title="Zoom in" id="zoomIn">＋</button>
+                    <button title="Zoom out" id="zoomOut">−</button>
+                    <button title="Reset layout" id="resetLayout">↻</button>
+                  </div>
+                </div>
+                <div class="graph-toolbar">
+                  <label>Metric overlay
+                    <select id="metricSelect">
+                      <option value="degree">Degree Centrality</option>
+                      <option value="betweenness">Betweenness</option>
+                      <option value="pagerank">PageRank</option>
+                    </select>
+                  </label>
+                  <label>Layout
+                    <select id="layoutSelect">
+                      <option value="force">Force-directed</option>
+                      <option value="radial">Radial</option>
+                      <option value="grid">Grid</option>
+                    </select>
+                  </label>
+                  <label class="search-label">⌕
+                    <input id="nodeSearch" type="search" placeholder="Search node / actor" />
+                  </label>
+                </div>
+                <div class="graph-canvas" id="graphCanvas">
+                  <svg id="networkGraph" viewBox="0 0 760 300" role="img" aria-label="Sociogram network graph">
+                    <g id="zoomGroup"></g>
+                  </svg>
+                  <div class="canvas-status"><span class="status-dot"></span><strong>LIVE GRAPH</strong><span id="visibleNodes">42,936 nodes · 178,291 edges</span></div>
+                </div>
+              </div>
+
+              <div class="panel table-panel">
+                <div class="panel-title compact">
+                  <div class="title-icon">▤</div>
+                  <div><strong>Data Provenance &amp; Job Status</strong><span>PROVENANCE LOG</span></div>
+                </div>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr><th>JOB ID</th><th>DATASET / TARGET</th><th>TYPE</th><th>STATUS</th><th>RESULT</th><th>RUNTIME</th><th>TIME</th></tr>
+                    </thead>
+                    <tbody id="jobTable"></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <aside class="right-column">
+              <div class="panel side-panel">
+                <div class="panel-title compact">
+                  <div class="title-icon">◫</div>
+                  <div><strong>Community Map</strong><span>GRAPH COMMUNITIES</span></div>
+                </div>
+                <div class="legend">
+                  <button data-community="all" class="legend-item active"><i class="cyan"></i><span>All Communities</span><b>42.9K</b></button>
+                  <button data-community="c1" class="legend-item"><i class="blue"></i><span>Network Core</span><b>18.4K</b></button>
+                  <button data-community="c2" class="legend-item"><i class="amber"></i><span>Community 04</span><b>9.7K</b></button>
+                  <button data-community="c3" class="legend-item"><i class="violet"></i><span>Community 12</span><b>7.2K</b></button>
+                  <button data-community="c4" class="legend-item"><i class="green"></i><span>Community 07</span><b>5.1K</b></button>
+                </div>
+              </div>
+
+              <div class="panel side-panel analysis-panel">
+                <div class="panel-title compact">
+                  <div class="title-icon">◉</div>
+                  <div><strong>Top Metrics</strong><span>NODE CENTRALITY</span></div>
+                  <span class="live-badge">LIVE</span>
+                </div>
+                <div class="ranking" id="ranking"></div>
+              </div>
+
+              <div class="panel side-panel alert-panel">
+                <div class="alert-icon">ⓘ</div>
+                <div>
+                  <strong>Interpretation Guardrail</strong>
+                  <p>Centrality describes modeled network position; it is not proof of influence or identity.</p>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>
